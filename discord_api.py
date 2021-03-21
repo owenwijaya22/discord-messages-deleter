@@ -1,33 +1,52 @@
 import requests
 import json
 import re
+from time import sleep as s
+payload = {}
+
+def search_guild_all_messages():
+    #Getting the infos needed
+    global channel_id, search_url
+    guild, channel_id = ' '.join(re.findall('(\d+)',
+                                            input('Guild url: '))).split()
+    search_url = f'https://discord.com/api/v6/guilds/{guild}/messages/search?author_id=778535813436145696&channel_id={channel_id}'
+
+
+def search_dm_all_messages():
+    #Getting the infos needed
+    global channel_id, search_url
+    channel_id = ''.join(re.findall('(\d+)', input('Dm url: ')))
+    search_url = f"https://discord.com/api/v6/channels/{channel_id}/messages/search?author_id=778535813436145696"
+
+
+def get_messages_id():
+    response = requests.get(search_url, headers=headers, data=payload)
+    data = json.loads(response.text)
+    return [x[0]['id'] for x in data['messages']]
+
+def _delete():
+    messages_url = f"https://discord.com/api/v6/channels/{channel_id}/messages/"
+    while True:
+        for x in get_messages_id():
+            message_url = messages_url + x
+            s(1)
+            responses = requests.delete(message_url, headers=headers, data=payload)
+            print(responses.status_code)
+        get_messages_id()
 
 a = input('Guild or dm?: ')
 if a.lower() == 'g':
-    guild = input('Guild url: ')
-    guild, channel_id = ' '.join(re.findall('(\d+)', guild)).split()
-    search_url = f'https://discord.com/api/v6/guilds/{guild}/messages/search?author_id=778535813436145696&channel_id={channel_id}&sort_by=timestamp&sort_order=desc&offset=0'
-elif a.lower() == 'd':
-    channel_id = input('Url: ')
-    channel_id = ''.join(re.findall('(\d+)', channel_id))
-    search_url = f"https://discord.com/api/v6/channels/{channel_id}/messages/search?author_id=778535813436145696&sort_by=timestamp&sort_order=desc&offset=0"
-url = f"https://discord.com/api/v6/channels/{channel_id}/messages/"
-payload = {}
+    search_guild_all_messages()
+
+else:
+    search_dm_all_messages()
+
+#Listing all the messages sent by the author
+
 headers = {
     'authorization':
-    'Nzc4NTM1ODEzNDM2MTQ1Njk2.YDTfkw.jbSYmVAVE95-lz62Gmlq0vGkv84',
+    'Nzc4NTM1ODEzNDM2MTQ1Njk2.YDC2ww.vrHd-dDQX1XDweKz48_3IRVzdvg',
 }
 
 
-def _delete():
-    for x in messages:
-        message_url = url + x
-        print(message_url)
-        responses = requests.delete(message_url, headers=headers, data=payload)
-        print(response.status_code)
-
-
-response = requests.get(search_url, headers=headers, data=payload)
-data = json.loads(response.text)
-messages = [x[0]['id'] for x in data['messages']]
 _delete()
