@@ -1,0 +1,4 @@
+guild = https://discord.com/api/v6/guilds/{guild_id}/messages/
+dm = https://discord.com/api/v6/channels/{channel_id}/messages
+author_id = input
+search?channel_id={channel_id}
