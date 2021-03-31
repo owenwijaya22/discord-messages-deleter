@@ -14,7 +14,7 @@ headers = {
 def get_channel_id():
     #parsing the channel id
     guild_channel = input('Input the url here: ')
-    return guild_channel.split('/')[-2:]
+    return guild_channel.split('/')[4:6]
 
 
 def build_search_url(guild_channel_ids):
