@@ -50,9 +50,16 @@ def build_delete_url(channel_id):
 
 def get_total_messages(search_url):
     #get total messages of the channel
-    r = requests.get(search_url, headers=headers)
-    data = r.json()
-    return data['total_results']
+    while True:
+        r = requests.get(search_url, headers=headers)
+        if r.status_code == 200:
+            #channel indexed
+            data = r.json()
+            return data['total_results']
+        elif r.status_code == 202:
+            #channel not yet indexed, waiting for 2 second
+            print('Channel not yet indexed, please wait for 2000 ms')
+            s(2.1)
 
 
 def get_message_id(message_data):
