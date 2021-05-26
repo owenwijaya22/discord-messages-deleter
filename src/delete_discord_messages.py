@@ -1,15 +1,12 @@
 import urllib
-from requests.models import PreparedRequest
 import requests
 import json
 import re
 from time import sleep as s
 import math
 
-headers = {
-    'authorization':
-    'mfa.ey0chPPIEj7A8czpIo4-CarSbWVP-o2jWeeJAg0IjwrAJbGQjTertifrMrdabCrRi_iWRZq0k7jqDEaaSUzs'
-}
+auth_token = input("Your auth token: ")
+headers = {'authorization': auth_token}
 
 
 def get_channel_id():
@@ -44,10 +41,6 @@ def build_search_url(guild_channel_ids):
         params, doseq=True), channel_id
 
 
-def build_delete_url(channel_id):
-    return f'https://discord.com/api/v6/channels/{channel_id}/messages'
-
-
 def get_total_messages(search_url):
     #get total messages of the channel
     while True:
@@ -60,6 +53,10 @@ def get_total_messages(search_url):
             #channel not yet indexed, waiting for 2 second
             print('Channel not yet indexed, please wait for 2000 ms')
             s(2.1)
+
+
+def build_delete_url(channel_id):
+    return f'https://discord.com/api/v6/channels/{channel_id}/messages'
 
 
 def get_message_id(message_data):
@@ -85,8 +82,10 @@ def recurse_delete(total_messages, delete_url, search_url):
     loop = math.ceil(total_messages / 25)
     for x in range(0, loop):
         r = requests.get(search_url, headers=headers)
+        s(1)
         data = r.json()
         message_id = get_message_id(data)
+        print(message_id)
         delete(message_id, delete_url)
 
 

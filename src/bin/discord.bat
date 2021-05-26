@@ -1,1 +1,1 @@
-py C:\Users\owenw\vscode\projects\discord\discord.py
+py C:\Users\owenw\vscode\projects\Discord\src\discord.py

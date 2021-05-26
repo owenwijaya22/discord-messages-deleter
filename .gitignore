@@ -1,8 +1,5 @@
-.vscode
-discord_venv
-raw.json
-tempCodeRunnerFile.py
-raw.txt
+*.bat
+*.vbs
 __pycache__
 build
 dist
