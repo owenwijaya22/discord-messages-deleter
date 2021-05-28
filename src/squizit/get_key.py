@@ -68,7 +68,7 @@ def recurse_get_messages(total_messages, search_url):
             r = requests.get(search_url, params=new_param ,headers=headers)
         else:
             print(r.status_code)
-        s(5)
+        s(3)
         data = r.json()
         links = get_message_link(data)
         all_links.append(links)

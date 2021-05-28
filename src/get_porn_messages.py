@@ -1,16 +1,8 @@
 import urllib
 import requests
 import json
-import re
 from time import sleep as s
-import math
-
-headers = {
-    'authorization':
-    'mfa.sjimlBXGnW8xr8YHWEtQGp8shrY2oI_yhD_a0FGQn8DyCEf-Eob8Kh8w99VDx9tLm591cN8fQMZCrQVzgw49'
-}
-
-
+from squizit.config import headers
 def get_channel_id():
     #parsing the channel id
     guild_channel = input('Input the url here: ')

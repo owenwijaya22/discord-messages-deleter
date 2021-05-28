@@ -13,4 +13,4 @@ def start_make_key():
         time.sleep(61)
 
 if __name__ == "__main__":
-    start_make_key()()
+    start_make_key()
