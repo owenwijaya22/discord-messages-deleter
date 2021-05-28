@@ -1,14 +1,9 @@
 import urllib
 import requests
 import json
-import re
 from time import sleep as s
-import math
+from config import headers
 
-headers = {
-    'authorization':
-    'mfa.sjimlBXGnW8xr8YHWEtQGp8shrY2oI_yhD_a0FGQn8DyCEf-Eob8Kh8w99VDx9tLm591cN8fQMZCrQVzgw49'
-}
 
 
 def get_channel_id():
@@ -92,7 +87,7 @@ def write_json(all_links, filename='./data/messages.json'):
     with open(filename, 'w') as file:
         json.dump(all_links, file)
 
-def main():
+def start_get_key():
     channel_ids = get_channel_id()
     search_url = build_search_url(channel_ids)
     total_messages = get_total_messages(search_url)
@@ -100,4 +95,4 @@ def main():
     write_json(all_links)
 
 if __name__ == "__main__":
-    main()
+    start_get_key()
