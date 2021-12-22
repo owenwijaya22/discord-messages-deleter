@@ -67,7 +67,7 @@ def get_message_id(message_data):
 
 
 def delete(message_id, delete_url):
-    for x in message_id:
+    for x in message_id:    
         r = requests.delete(delete_url + '/' + x, headers=headers)
         s(3)
         if r.status_code == 204:

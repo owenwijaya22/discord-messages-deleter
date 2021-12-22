@@ -1,0 +1,5 @@
+POST https://discord.com/api/v9/channels/641351291343208448/messages
+Authorization: ODEzNzAyMDg1NTA5Nzc1Mzcw.YcAm7w.ie_QO2nhvWi5i5R6XqLq164JKZo
+Content-Type: application/json
+
+{"content":"<@!300506208832585728> thank you","nonce":"923027088506617856","tts":false}
