@@ -13,7 +13,11 @@ def choose_token():
 def choose_url():
     subject = input('Math (m) or Physics (p): ')
     if subject == 'm':
-        url = "https://discord.com/api/v9/channels/641351235215294486/messages"
+        channels = random.choice([
+            "536995777981972491", "754860723321962628", "641351291343208448",
+            "917170713755017217", "803057978277888020", "704944645712642098"
+        ])
+        url = f"https://discord.com/api/v9/channels/{channels}/messages"
     elif subject == 'p':
         url = "https://discord.com/api/v9/channels/536995799859724309/messages"
     return url
