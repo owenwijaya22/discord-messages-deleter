@@ -29,6 +29,7 @@ def build_search_url(guild_id, channel_id):
     return base_url + '/search?' + urllib.parse.urlencode(params, doseq=True)
 
 
+#this function doesn't need async/await (asynchronous programming) since this function will only be called after 25 api requests and doesn't have any potential "asyncio task" to be runned in the background (event_loop)
 def get_messages(search_url):
     response = requests.get(search_url, headers=headers)
     if response.status == 202:
@@ -40,11 +41,11 @@ def get_messages(search_url):
         return get_messages(search_url)
     elif response.status != 200:
         if response.status == 429:
-            wait_for_indexing = response.json()['retry_after']
+            wait_for_rate_limit = response.json()['retry_after']
             print(
-                f"Being rate limited by Discord's API for {wait_for_indexing}s"
+                f"Being rate limited by Discord's API for {wait_for_rate_limit}s"
             )
-            asyncio.sleep(wait_for_indexing * 2)
+            sleep(wait_for_rate_limit * 2)
             return get_messages(search_url)
         else:
             print(
@@ -72,11 +73,11 @@ async def delete_message(delete_url, session):
     async with session.delete(delete_url, headers=headers) as response:
         if response.status != 200:
             if response.status == 429:
-                wait_for_indexing = (await response.json())['retry_after']
+                wait_for_rate_limit = (await response.json())['retry_after']
                 print(
-                    f"Being rate limited by Discord's API for {wait_for_indexing}s"
+                    f"Being rate limited by Discord's API for {wait_for_rate_limit}s"
                 )
-                asyncio.sleep(wait_for_indexing * 2)
+                asyncio.sleep(wait_for_rate_limit*2)
                 return await delete_message(delete_url, session)
             else:
                 print(
@@ -114,7 +115,8 @@ async def recurse_delete(channel_id, search_url):
 def main():
     guild_id, channel_id = get_channel_ids()
     search_url = build_search_url(guild_id, channel_id)
-    asyncio.get_event_loop().run_until_complete(recurse_delete(channel_id, search_url))
+    asyncio.get_event_loop().run_until_complete(
+        recurse_delete(channel_id, search_url))
     # write_data('./data/messages.json', data)
 
 
