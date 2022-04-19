@@ -92,9 +92,9 @@ def recurse_delete(total_messages, delete_url, search_url):
 def main():
     channel_ids = get_channel_id()
     search_url, channel_id = build_search_url(channel_ids)
-    print(search_url)
     total_messages = get_total_messages(search_url)
     delete_url = build_delete_url(channel_id)
+    print(search_url, delete_url)
     recurse_delete(total_messages, delete_url, search_url)
 
 

