@@ -8,7 +8,12 @@ from time import sleep
 with open('./data/data.json', 'r') as file:
     auth_token = json.load(file)['auth_token']
 
-headers = {'authorization': auth_token}
+headers = {
+    'authorization':
+    auth_token,
+    'user-agent':
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36 Edg/100.0.1185.50"
+}
 
 
 def get_channel_ids():
@@ -32,14 +37,14 @@ def build_search_url(guild_id, channel_id):
 #this function doesn't need async/await (asynchronous programming) since this function will only be called after 25 api requests and doesn't have any potential "asyncio task" to be runned in the background (event_loop)
 def get_messages(search_url):
     response = requests.get(search_url, headers=headers)
-    if response.status == 202:
+    if response.status_code == 202:
         wait_for_indexing = response.json()['retry_after']
         print(
             f"This channel wasn't indexed yet, waiting {wait_for_indexing}s for discord to index it..."
         )
         sleep(wait_for_indexing)
         return get_messages(search_url)
-    elif response.status != 200:
+    elif response.status_code != 200:
         if response.status == 429:
             wait_for_rate_limit = response.json()['retry_after']
             print(
@@ -74,22 +79,18 @@ async def delete_message(delete_url, session):
         if response.status != 200:
             if response.status == 429:
                 wait_for_rate_limit = (await response.json())['retry_after']
-                print(
-                    f"Being rate limited by Discord's API for {wait_for_rate_limit}s"
-                )
-                asyncio.sleep(wait_for_rate_limit*2)
+                print(f"Being rate limited by Discord's API for {wait_for_rate_limit}s")
+                await asyncio.sleep(wait_for_rate_limit*2)
                 return await delete_message(delete_url, session)
             else:
-                print(
-                    f"Error searching messages, API responded with status {response.status}"
-                )
+                print(f"Error searching messages, API responded with status {response.status}")
         else:
             print(response.status)
 
 
 async def recurse_delete(channel_id, search_url):
     delete_url = f'https://discord.com/api/v9/channels/{channel_id}/messages'
-    total_data = requests.get('search_url')
+    total_data = get_messages(search_url)
     total_messages = total_data['total_results']
     loops = math.ceil(total_messages / 25)
     async with aiohttp.ClientSession() as session:
@@ -104,6 +105,7 @@ async def recurse_delete(channel_id, search_url):
                 delete_message(delete_url, session)
                 for delete_url in delete_urls
             ]
+            print(delete_tasks)
             await asyncio.gather(*delete_tasks)
 
 

@@ -4,4 +4,4 @@ __pycache__
 build
 dist
 *.spec
-/data/data.json
+/data/*data.json
